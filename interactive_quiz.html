@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interactive Quiz App</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .question { font-weight: bold; }
+        .choices { margin-top: 10px; }
+        .choice { margin: 5px 0; }
+        .feedback { margin-top: 10px; font-weight: bold; }
+        .navigation { margin-top: 20px; }
+        .score { margin-top: 20px; font-size: 18px; }
+    </style>
+</head>
+<body>
+    <h1>Interactive Quiz App</h1>
+    <div id="quiz-container">
+        <div class="question" id="question"></div>
+        <div class="choices" id="choices"></div>
+        <div class="feedback" id="feedback"></div>
+        <div class="navigation">
+            <button onclick="prevQuestion()">Previous</button>
+            <button onclick="nextQuestion()">Next</button>
+        </div>
+        <div class="score" id="score"></div>
+    </div>
+
+    <script>
+        let questions = [{"question": "Which of the following best describes an amino acid?", "choices": ["A molecule with a carboxyl and amino group", "A sugar molecule", "A lipid molecule", "A nucleotide"], "answer": "A molecule with a carboxyl and amino group"}, {"question": "What form do amino acids take in aqueous solution?", "choices": ["Neutral molecules", "Cations", "Anions", "Dipolar ions (zwitterions)"], "answer": "Dipolar ions (zwitterions)"}, {"question": "Which amino acid contains a sulfur group that can form disulfide bonds?", "choices": ["Glycine", "Cysteine", "Alanine", "Serine"], "answer": "Cysteine"}];
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = Array(questions.length).fill(false);
+
+        function loadQuestion() {
+            document.getElementById("feedback").innerText = "";
+            let q = questions[currentQuestion];
+            document.getElementById("question").innerText = (currentQuestion + 1) + ". " + q.question;
+            let choicesDiv = document.getElementById("choices");
+            choicesDiv.innerHTML = "";
+            q.choices.forEach((choice, index) => {
+                let btn = document.createElement("button");
+                btn.innerText = choice;
+                btn.className = "choice";
+                btn.onclick = () => checkAnswer(choice);
+                choicesDiv.appendChild(btn);
+            });
+            updateScore();
+        }
+
+        function checkAnswer(selected) {
+            let correct = questions[currentQuestion].answer;
+            if (!answered[currentQuestion]) {
+                if (selected === correct) {
+                    document.getElementById("feedback").innerText = "Correct!";
+                    score++;
+                } else {
+                    document.getElementById("feedback").innerText = "Incorrect. Correct answer: " + correct;
+                }
+                answered[currentQuestion] = true;
+                updateScore();
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                loadQuestion();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                loadQuestion();
+            }
+        }
+
+        function updateScore() {
+            document.getElementById("score").innerText = "Score: " + score + " / " + questions.length;
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>

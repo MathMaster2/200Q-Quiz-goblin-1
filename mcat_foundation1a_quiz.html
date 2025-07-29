@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MCAT Foundation 1A Quiz</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background-color: #f4f4f4; }
+        .quiz-container { background: white; padding: 20px; border-radius: 8px; max-width: 800px; margin: auto; }
+        .question { font-weight: bold; }
+        .options { margin-top: 10px; }
+        .options label { display: block; margin-bottom: 8px; }
+        .navigation { margin-top: 20px; }
+        .navigation button { padding: 10px 20px; margin-right: 10px; }
+        .feedback { margin-top: 10px; font-weight: bold; }
+        .score { margin-top: 20px; font-size: 1.2em; }
+    </style>
+</head>
+<body>
+<div class="quiz-container">
+    <div id="quiz"></div>
+    <div class="navigation">
+        <button onclick="prevQuestion()">Previous</button>
+        <button onclick="nextQuestion()">Next</button>
+        <button onclick="submitAnswer()">Submit Answer</button>
+    </div>
+    <div class="feedback" id="feedback"></div>
+    <div class="score" id="score"></div>
+</div>
+
+<script>
+const questions = [
+    {
+        question: "Which of the following best describes the structure of an amino acid at physiological pH?",
+        options: ["A neutral molecule with no charge", "A zwitterion with a positively charged amino group and a negatively charged carboxyl group", "A molecule with both groups protonated", "A molecule with both groups deprotonated"],
+        answer: 1,
+        skill: "Scientific Concepts and Principles"
+    },
+    {
+        question: "Which amino acid contains a thiol group that can form disulfide bonds?",
+        options: ["Methionine", "Cysteine", "Serine", "Threonine"],
+        answer: 1,
+        skill: "Scientific Concepts and Principles"
+    },
+    {
+        question: "A researcher mutates a hydrophobic amino acid in the core of a protein to a charged residue. What is the most likely effect?",
+        options: ["Increased protein stability", "No effect on protein structure", "Disruption of hydrophobic interactions and destabilization", "Enhanced enzymatic activity"],
+        answer: 2,
+        skill: "Scientific Reasoning and Problem-Solving"
+    },
+    {
+        question: "Which experimental method would best determine the isoelectric point of a protein?",
+        options: ["Western blotting", "Isoelectric focusing", "Gel filtration chromatography", "Mass spectrometry"],
+        answer: 1,
+        skill: "Research Design and Execution"
+    },
+    {
+        question: "In a study, researchers observe that a protein denatures at 60°C. Which graph best represents this data?",
+        options: ["A linear increase in activity with temperature", "A bell-shaped curve with a peak at 60°C", "A sharp drop in activity at 60°C", "A constant activity across all temperatures"],
+        answer: 2,
+        skill: "Data-Based and Statistical Reasoning"
+    }
+];
+
+let currentQuestion = 0;
+let score = 0;
+let answered = Array(questions.length).fill(false);
+
+function loadQuestion() {
+    const q = questions[currentQuestion];
+    const quizDiv = document.getElementById("quiz");
+    const feedbackDiv = document.getElementById("feedback");
+    feedbackDiv.innerHTML = "";
+    quizDiv.innerHTML = `
+        <div class="question">(${currentQuestion + 1}/${questions.length}) [${q.skill}]<br>${q.question}</div>
+        <div class="options">
+            ${q.options.map((opt, i) => `<label><input type="radio" name="option" value="${i}"> ${opt}</label>`).join("")}
+        </div>
+    `;
+}
+
+function submitAnswer() {
+    const selected = document.querySelector('input[name="option"]:checked');
+    if (!selected) {
+        alert("Please select an answer.");
+        return;
+    }
+    const answer = parseInt(selected.value);
+    const feedbackDiv = document.getElementById("feedback");
+    if (!answered[currentQuestion]) {
+        if (answer === questions[currentQuestion].answer) {
+            feedbackDiv.innerHTML = "✅ Correct!";
+            score++;
+        } else {
+            feedbackDiv.innerHTML = `❌ Incorrect. Correct answer: ${questions[currentQuestion].options[questions[currentQuestion].answer]}`;
+        }
+        answered[currentQuestion] = true;
+        document.getElementById("score").innerText = `Score: ${score} / ${questions.length}`;
+    } else {
+        feedbackDiv.innerHTML = "You already answered this question.";
+    }
+}
+
+function nextQuestion() {
+    if (currentQuestion < questions.length - 1) {
+        currentQuestion++;
+        loadQuestion();
+    }
+}
+
+function prevQuestion() {
+    if (currentQuestion > 0) {
+        currentQuestion--;
+        loadQuestion();
+    }
+}
+
+window.onload = loadQuestion;
+</script>
+</body>
+</html>

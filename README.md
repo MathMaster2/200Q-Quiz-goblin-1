@@ -1,2 +1,2 @@
 # 300Q-Quiz-goblin-1
-200 Q quiz for early starter package for MCAT beast
+300 Q quiz for early starter package for MCAT beast
